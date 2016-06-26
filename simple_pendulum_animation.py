@@ -6,14 +6,13 @@ Created on Sat Jun  4 10:05:28 2016
 
 Simple Pendulum Project
 """
-
-"""Want to set all the variables and calculate the matix T"""
-import numpy as np
 import matplotlib
-matplotlib.use('TKAgg')
+import numpy as np
+from matplotlib import animation
 from matplotlib import pyplot as plt
-from matplotlib import pylab
-import matplotlib.animation as animation
+
+matplotlib.use('TKAgg')
+
 
 class Matrix:
     def __init__(self, dt=0.1, gravity = 9.81, Damping=1000, alpha=1, mass=1000, length=1,howmanytimes = 100000):
@@ -31,12 +30,12 @@ class Matrix:
         self.onetwo = -self.dt*self.g/(self.l*(self.a)**2)
         self.twoone = self.dt
         self.twotwo = 1
-        self.T = [self.oneone, self.onetwo, 
+        self.T = [self.oneone, self.onetwo,
                   self.twoone, self.twotwo]
         return self.T
 
 """Want to generate intial conditions to feed into another class (which will
-calculate the first set of variables). 
+calculate the first set of variables).
 Either set the initial conditions or calculate phi(t=0) from theta(t=0)"""
 class GenerateInitialConditions:
     def initialconditions(self,theta_nought=np.pi/2,phi_nought=1):
@@ -45,13 +44,13 @@ class GenerateInitialConditions:
         self.phi = phi_nought
         return [self.phi, self.theta]
 
-"""Want to: 1) take matrix from Matrix class and take the initial conditions 
-from GenerateInitialConditions class 2) calculate the first  input vector 3) apply the 
-matrix T to get the output vector 4) store the output 5) set the output to the 
+"""Want to: 1) take matrix from Matrix class and take the initial conditions
+from GenerateInitialConditions class 2) calculate the first  input vector 3) apply the
+matrix T to get the output vector 4) store the output 5) set the output to the
 new input 6) repeat"""
-class CalculateVariables(Matrix):#(Matrix, GenerateInitialConditions):  
+class CalculateVariables(Matrix):#(Matrix, GenerateInitialConditions):
     thetaAxis = []
-    def CalculateFirstInputVector(self): 
+    def CalculateFirstInputVector(self):
         """creates the first vector [phi, theta] from the intial conditions"""
         initial = GenerateInitialConditions()
         initial = GenerateInitialConditions.initialconditions(initial)
@@ -63,7 +62,7 @@ class CalculateVariables(Matrix):#(Matrix, GenerateInitialConditions):
     def GetMatrixT(self):
         matrix = Matrix()
         self.T = Matrix.matrixT(matrix)
-        return self.T 
+        return self.T
     def Store(self,addThisThetaValue):
         """Stores values in array"""
         self.addThisThetaValue = addThisThetaValue
@@ -82,8 +81,8 @@ class CalculateVariables(Matrix):#(Matrix, GenerateInitialConditions):
     def GetTimeRange(self):
         return self.howmanytimes * self.dt
 
-class Run(Matrix, CalculateVariables):
-    def Variables(self):#used to be called run        
+class Run(CalculateVariables, Matrix):
+    def Variables(self):#used to be called run
         """Run program"""
         """run an instance to set up the values from the axis"""
         self.b = CalculateVariables()
@@ -92,7 +91,7 @@ class Run(Matrix, CalculateVariables):
         self.outputVector = CalculateVariables.Output(self.b)
         """define the axis values"""
         return self.b.thetaAxis, self.b.timeAxis
-    def GetFig(self):        
+    def GetFig(self):
         return self.fig
 
 b = Run()
@@ -108,7 +107,7 @@ line, = ax.plot([], [], lw=2) #an empty line, we add data afterwards
 def init():
     line.set_data([],[])
     return line,
-    
+
 def animate(i):
     theta = c[0]
     time = c[1][i]
