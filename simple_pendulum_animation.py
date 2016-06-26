@@ -81,7 +81,7 @@ class CalculateVariables(Matrix):#(Matrix, GenerateInitialConditions):
     def GetTimeRange(self):
         return self.howmanytimes * self.dt
 
-class Run(Matrix, CalculateVariables):
+class Run(CalculateVariables, Matrix):
     def Variables(self):#used to be called run
         """Run program"""
         """run an instance to set up the values from the axis"""
